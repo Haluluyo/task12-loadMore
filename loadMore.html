@@ -98,7 +98,7 @@
           }
           var query='?'
           for(key in options.data){
-            query+=key+'='+options.data[key]+&
+            query+=key+'='+options.data[key]+'&'
           }
           query=query.substr(0,query.length-1)
           console.log(options.url+query)
