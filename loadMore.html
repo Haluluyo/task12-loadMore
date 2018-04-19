@@ -19,10 +19,6 @@
         border: 1px solid #ccc;
         cursor: pointer;
       }
-      .hover {
-        background-color: green;
-        color: #fff;
-      }
       #myBtn {
         display: block;
         width: 80px;
@@ -33,6 +29,10 @@
         background-color: #fff;
         color: #e27272;
         cursor: pointer;
+      }
+      #ct li:hover {
+        background-color: green;
+        color: #fff;
       }
     </style>
   </head>
@@ -46,6 +46,63 @@
     <script>
       var ct=document.querySelector("#ct")
       var btn=docuent.querySelector("#myBtn")
+      var isDataArrive=true;
+      var pageIndex=3;
       
+      btn.addEventListener('click',function(e){
+        e.preventDefault()
+        if(!isDataArrive){
+          return;
+        }
+        loadData(function(){
+          renderPage(news)
+          pageIndex+=5;
+          isDataArrive=true;
+        })
+        isDataArrive=false;
+      })
+      function loadData(callback){
+        ajax({
+          type:'get',
+          url:'/loadMore',
+          data:{
+            index: pageIndex;
+            length: 5;
+          },
+          onSuccess: callback,
+          onError: function(){
+            console.log('Error!')
+          }
+        })
+        function renderPage(news){
+          var fragement=document.createDocumentFragment();
+          for(var i=0;i<news.length;i++){
+          var node=document.createElement('li')
+          node.innerText=new[i]
+            fragment.appendChild(node)
+          }
+          ct.appendChild(fragment)
+        }
+        function ajax(options){
+          var xhr=new XMLHttpRequest()
+          xhr.onreadystatechange=function(){
+            if(xhr.readyState===4){
+              if(xhr.status===200&&xhr.status===304){
+                var results=JSON.parse(xhr.responseText)
+                options.onSuccess(results)
+              }else{
+                options.onError()
+              }
+            }
+          }
+          var query='?'
+          for(key in options.data){
+            query+=key+'='+options.data[key]+&
+          }
+          query=query.substr(0,query.length-1)
+          xhr.open(options.type,options.url+query,true)
+          xhr.send()
+        }
+      }
       
     </script>
