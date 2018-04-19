@@ -89,6 +89,7 @@
             if(xhr.readyState===4){
               if(xhr.status===200&&xhr.status===304){
                 var results=JSON.parse(xhr.responseText)
+                console.log(results)
                 options.onSuccess(results)
               }else{
                 options.onError()
@@ -100,6 +101,7 @@
             query+=key+'='+options.data[key]+&
           }
           query=query.substr(0,query.length-1)
+          console.log(options.url+query)
           xhr.open(options.type,options.url+query,true)
           xhr.send()
         }
